@@ -1,0 +1,17 @@
+dataset_name: csg863
+avr_rows: 3465
+avr_cols: 2212
+same_patch_assump: [<function get_same_patch at 0x7ff7255c1670>, <function get_neighbouring_patches at 0x7ff7255c15e0>]
+diff_patch_assump: [<function get_same_patch at 0x7ff7255c1670>, <function get_neighbouring_patches at 0x7ff7255c15e0>]
+same_patch_aug: [<function h_flip at 0x7ff7255c1310>, <function rotate_180 at 0x7ff7255c1430>]
+diff_patch_aug: [<function v_flip at 0x7ff7255c13a0>, <function identity at 0x7ff7255c1550>]
+patch_size: 350
+inner_size: 20
+train_set_size: 2160
+test_set_size: 540
+sample_set_size: 90
+learning_rate: 1e-05
+epochs: 100
+patient: 7
+batch_size: 8
+branch_model 0-alex, 1-vgg, 2-xception, 3-custom: 3
