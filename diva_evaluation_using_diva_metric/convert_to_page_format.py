@@ -7,11 +7,11 @@ from datetime import datetime
 import lxml.etree as ET
 
 _ns = {'p': 'http://schema.primaresearch.org/PAGE/gts/pagecontent/2013-07-15'}
-output_folder='crop_csg18_prediction_xml_eme/'
-#os.makedirs('crop_cb55_prediction_xml')
-polygon_labels_dir= 'crop_csg18_polygon_labels_eme/polygon_labels_eme/'
-original_pages_dir= 'CSG18/'
-crop_pages_dir='crop_csg18/'
+output_folder='uutls_crop_cb55_prediction_xml/'
+#os.makedirs('uutls_crop_cb55_prediction_xml')
+polygon_labels_dir= 'uutls_crop_cb55_polygon_labels/'
+original_pages_dir= 'CB55/'
+crop_pages_dir='crop_cb55/'
 
 def get_page_filename(image_filename: str) -> str:
     return os.path.join(os.path.dirname(image_filename),
@@ -49,7 +49,26 @@ def coordinates(cnt):
         coord=str(cnt[0][i][0][0])+','+str(cnt[0][i][0][1])+' '
         coords=coords+coord
     return coords
-
+    
+def clean(img):
+  #find all your connected components (white blobs in your image)
+  nb_components, output, stats, centroids = cv2.connectedComponentsWithStats(img, connectivity=8)
+  #connectedComponentswithStats yields every seperated component with information on each of them, such as size
+  #the following part is just taking out the background which is also considered a component, but most of the time we don't want that.
+  sizes = stats[1:, -1]; nb_components = nb_components - 1
+  
+  # minimum size of particles we want to keep (number of pixels)
+  #here, it's a fixed value, but you can set it as you want, eg the mean of the sizes or whatever
+  min_size = 1000  
+  
+  #your answer image
+  img2 = np.zeros((output.shape),dtype=np.uint8)
+  #for every component in the image, you keep it only if it's above min_size
+  for i in range(0, nb_components):
+      if sizes[i] >= min_size:
+          img2[output == i + 1] = 255
+  return img2
+  
 original_path_list = glob('{}/*.jpg'.format(original_pages_dir))
 for original_path in original_path_list:
     xmlns = "http://schema.primaresearch.org/PAGE/gts/pagecontent/2018-07-15"
@@ -95,6 +114,7 @@ for original_path in original_path_list:
 
 
     polygon_labels = cv2.imread(polygon_labels_dir + original_page_name[:-4] + '.png', 0)
+    print(polygon_labels_dir + original_page_name[:-4] + '.png')
     original_polygon_labels = np.zeros((rows, cols), dtype=np.uint8)
     cnt=xml_to_coordinates(points)
     (x,y,w,h) = cv2.boundingRect(cnt)
@@ -105,8 +125,11 @@ for original_path in original_path_list:
     for tlabel in labels:
         textline = np.zeros((rows, cols), dtype=np.uint8)
         textline[original_polygon_labels == tlabel] = 255
-        tcontours, hierarchy = cv2.findContours(textline, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        textline=clean(textline)
+        #tcontours, hierarchy = cv2.findContours(textline, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        tcontours, hierarchy = cv2.findContours(textline, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         tcoords = coordinates(tcontours)
+        print(len(tcoords))
         TextLine = ET.SubElement(TextRegion, 'TextLine')
         TextLine.set('id', 'textline_' + str(textlineid))
         TextLine.set('custom', '0')

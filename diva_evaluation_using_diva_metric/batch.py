@@ -7,21 +7,20 @@ Created on Tue Jan 23 10:46:02 2018
 
 import os
 import subprocess
-import numpy as np
 
 imageGroundTruth=[]
 xmlGroundTruth=[]
 xmlPrediction=[]
 overlap=[]
-outputPath='../cb55_overlap_output_knots/'
-#os.makedirs('cb55_overlap_output_knots')
+outputPath='../cb55_overlap_output/'
+#os.makedirs('cb55_overlap_output')
 csv=False
 
 
-imageGroundTruth_folder='CSG18_ground_image/'
-xmlGroundTruth_folder='CSG18_ground_xml/'
-xmlPrediction_folder='crop_csg18_prediction_xml_eme/'
-original_image_folder='CSG18/'
+imageGroundTruth_folder='CB55_ground_image/'
+xmlGroundTruth_folder='CB55_ground_xml/'
+xmlPrediction_folder='uutls_crop_cb55_prediction_xml/'
+original_image_folder='CB55/'
 
 imageGroundTruth=sorted(os.listdir(imageGroundTruth_folder))
 xmlGroundTruth=sorted(os.listdir(xmlGroundTruth_folder))
@@ -97,9 +96,9 @@ for i in range(number_of_files):
     print(filename)
     f.write(filename+'\t pixel IU=' +str(pixeliu)+'\t line IU=' +str(lineiu)+'\t line F1=' +str(linef1)+'\n')
 
-mean_pixeliu=np.mean(pixelIU)
-mean_lineiu=np.mean(lineIU)
-mean_linef1=np.mean(lineF1)
+mean_pixeliu=sum(pixelIU)/len(pixelIU)
+mean_lineiu=sum(lineIU)/len(lineIU)
+mean_linef1=sum(lineF1)/len(lineF1)
 
 print('mean pixel iu = ', mean_pixeliu)
 print('mean line iu = ', mean_lineiu)
