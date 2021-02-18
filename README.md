@@ -1,4 +1,4 @@
-# Unsupervised learning of text line segmentation by differentiating coarse pattern 
+# Unsupervised learning of text line segmentation by differentiating coarse patterns 
 
 We present an unsupervised deep learning method that embeds document image patches to a compact 
 Euclidean space where distances correspond to a coarse text line pattern similarity. Once this 
