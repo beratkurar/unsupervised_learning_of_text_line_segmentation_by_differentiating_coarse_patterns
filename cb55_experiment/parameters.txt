@@ -1,0 +1,17 @@
+dataset_name: cb55
+avr_rows: 4150
+avr_cols: 2273
+same_patch_assump: [<function get_same_patch at 0x7f1cda87a700>, <function get_neighbouring_patches at 0x7f1cda87a670>]
+diff_patch_assump: [<function get_same_patch at 0x7f1cda87a700>, <function get_neighbouring_patches at 0x7f1cda87a670>]
+same_patch_aug: [<function h_flip at 0x7f1cda87a3a0>, <function rotate_180 at 0x7f1cda87a4c0>]
+diff_patch_aug: [<function v_flip at 0x7f1cda87a430>, <function identity at 0x7f1cda87a5e0>]
+patch_size: 350
+inner_size: 100
+train_set_size: 30
+test_set_size: 30
+sample_set_size: 90
+learning_rate: 1e-05
+epochs: 100
+patient: 7
+batch_size: 8
+branch_model 0-alex, 1-vgg, 2-xception, 3-custom: 3
